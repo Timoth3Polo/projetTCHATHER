@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+enum ConversationTypes {
+  ONE_TO_ONE
+  GROUP
+}
+
+model User {
+  userId  String @id @default(uuid())
+  userName String @unique
+  userEmail String @unique
+  userPassword String 
+  userConversations Conversation[]
+}
+
+model Message {
+  messageId String @id @default(uuid())
+  messageText String
+  messageAttachements Attachement[]
+  conversations Conversation[]
+}
+
+model Conversation {
+  conversationId String @id @default(uuid())
+  conversationName String
+  conversationType ConversationTypes
+  conversationUsers User[]
+  conversationMessages Message[]
+}
+
+model Attachement {
+  attachementId String @id @default(uuid())
+  attachementFileType String
+  attachementFileName String
+  attachementUrl String
+  attachementMessageId String
+  attachementMessage Message @relation(fields: [attachementMessageId], references: [messageId]) 
+}
