@@ -1,6 +1,7 @@
 import { BadRequestError, Body, JsonController, Post } from 'routing-controllers';
-import { userRegisterSchema } from "@tchather/common";
+import { prismaClient } from "../utils/prismaClient";
 import { Asserts } from 'yup';
+import { userRegisterSchema } from '@tchather/common';
 
 @JsonController("/users")
 export class UserController {
@@ -11,5 +12,8 @@ export class UserController {
         } catch (error) {
             throw new BadRequestError(error);
         }
+        
+        
+        await prismaClient.user.create({data:body});
     }
 }
