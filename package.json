@@ -1,0 +1,8 @@
+{
+    "name": "projetTCHATHER",
+    "private": true,
+    "repository": {
+        "url": "https://github.com/Timoth3Polo/projetTCHATHER"
+    },
+    "workspaces":["packages/*"]
+}

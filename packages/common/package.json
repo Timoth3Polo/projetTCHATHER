@@ -1,0 +1,13 @@
+{
+  "name": "@tchather/common",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "yup": "^0.32.9"
+  },
+  "scripts": {
+    "build:watch": "tsc --watch"
+  }
+}
