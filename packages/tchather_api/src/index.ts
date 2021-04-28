@@ -1,17 +1,14 @@
-import "reflect-metadata";
-import { createExpressServer } from 'routing-controllers'; 
-import { StatusController } from './controllers/StatusControllers';
-import { UserController } from './controllers/UserController';
-import {json} from "express";
-import morgan from "morgan";
+import { createExpressServer } from "routing-controllers";
+import { StatusController } from "./controllers/StatusControllers";
+import { UserController } from "./controllers/UserController";
+import { authorizationMiddleware } from "./middleware/authorizationMiddleware";
+import { currentUserChecker } from "./middleware/currentUserMiddleware";
+import { ConversationsController } from './controllers/ConversationController';
 
-const app = createExpressServer({
-    controllers: [StatusController, UserController],
+export const app = createExpressServer({
+    controllers: [StatusController, UserController, ConversationsController],
     routePrefix: "/api",
+    authorizationChecker: authorizationMiddleware,
+    currentUserChecker: currentUserChecker,
     validation: false,
 });
-
-app.use(json());
-app.use(morgan("dev"));
-
-app.listen(8080, () => console.log("App started at :8080 🚀"))

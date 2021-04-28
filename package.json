@@ -4,5 +4,10 @@
     "repository": {
         "url": "https://github.com/Timoth3Polo/projetTCHATHER"
     },
+    "scripts": {
+        "build:common": "yarn workspace @tchather/common  build",
+        "build-watch:common": "yarn workspace @tchather/common  build:watch",
+        "postinstall": "yarn build:common"
+    },
     "workspaces":["packages/*"]
 }
