@@ -22,28 +22,35 @@ model User {
   userEmail String @unique
   userPassword String 
   userConversations Conversation[]
+  userConversationOwned Conversation[] @relation("userConversationOwned")
+  userMessages Message[]
 }
 
 model Message {
   messageId String @id @default(uuid())
   messageText String
-  messageAttachements Attachement[]
+  messageAttachments Attachment[]
+  messageUserSenderId String
+  messageUserSender User @relation(fields: [messageUserSenderId], references: [userId])
   conversations Conversation[]
+
 }
 
 model Conversation {
   conversationId String @id @default(uuid())
   conversationName String
   conversationType ConversationTypes
+  conversationUserOwnerId String
+  conversationUserOwner User @relation("userConversationOwned", fields: [conversationUserOwnerId], references: [userId])
   conversationUsers User[]
   conversationMessages Message[]
 }
 
-model Attachement {
-  attachementId String @id @default(uuid())
-  attachementFileType String
-  attachementFileName String
-  attachementUrl String
-  attachementMessageId String
-  attachementMessage Message @relation(fields: [attachementMessageId], references: [messageId]) 
+model Attachment {
+  attachmentId String @id @default(uuid())
+  attachmentFileType String
+  attachmentFileName String
+  attachmentUrl String
+  attachmentMessageId String
+  attachmentMessage Message @relation(fields: [attachmentMessageId], references: [messageId]) 
 }

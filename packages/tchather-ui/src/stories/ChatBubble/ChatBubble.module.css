@@ -1,0 +1,25 @@
+.UserMessage {
+  border-radius: 20px;
+  padding: 0.2em 0.5em;
+  font-size: 1em;
+  max-width: 250px;
+  width: 100%;
+  display: inline-block;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: normal;
+  line-break: strict;
+  hyphens: none;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+}
+
+.CurrentUser {
+  background-color: #0099fe;
+  color: white;
+}
+
+.OtherUser {
+  background-color: #e3e6ea;
+  color: black;
+}

@@ -1,0 +1,19 @@
+.InputWrapper {
+  background-color: rgb(30, 27, 45);
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 0.5em;
+  padding-left: 0.8em;
+  font-size: 1.2vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/*  */
+.Input {
+  background-color: rgb(30, 27, 45);
+  color: #ffffff;
+  outline: none;
+  border: none;
+  width: 100%;
+}

@@ -1,6 +1,6 @@
+import "reflect-metadata";
 import { json } from "express";
 import morgan from "morgan";
-import "reflect-metadata";
 import { app } from "./index";
 
 app.use(json());

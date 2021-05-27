@@ -1,0 +1,23 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": [">0.25%", "ie >= 11"]
+        },
+        "corejs": 3,
+        "useBuiltIns": "entry"
+      }
+    ],
+    "@babel/preset-typescript",
+    "@babel/preset-react"
+  ],
+  "ignore": ["**/*.stories.tsx"],
+  "plugins": [
+    "@babel/proposal-class-properties",
+    "@babel/proposal-object-rest-spread",
+    "react-css-modules"
+     
+  ]
+}

@@ -7,6 +7,7 @@ import { TestUtils } from "../utils/test/TestUtils";
 
 let testData: any = {};
 let user1CreatedConversation: any;
+
 beforeAll(async () => {
   await TestUtils.dumpDatabase();
   testData = await TestUtils.createTestData();
@@ -45,7 +46,7 @@ describe("UserController tests", () => {
       .set("authorization", testData.usersToken.user1Token)
       .send({
         conversationName: "ThomasTeam",
-        conversationUsers: [testData.users[2].userId],
+        conversationUsers: [testData.users[1].userId],
       })
       .expect(200)
       .then(({body}) => {
@@ -87,7 +88,7 @@ describe("UserController tests", () => {
       .get(`/api/conversations/${user1CreatedConversation.conversationId}`)
       .set("authorization", testData.usersToken.user3Token)
       .send()
-      .expect(403)
+      .expect(401)
     done();
   });
 
@@ -96,7 +97,7 @@ describe("UserController tests", () => {
       .delete(`/api/conversations/${user1CreatedConversation.conversationId}`)
       .set("authorization", testData.usersToken.user2Token)
       .send()
-      .expect(403)
+      .expect(401)
     done();
   });
 
@@ -105,8 +106,7 @@ describe("UserController tests", () => {
       .delete(`/api/conversations/${user1CreatedConversation.conversationId}`)
       .set("authorization", testData.usersToken.user1Token)
       .send()
-      .expect(403)
+      .expect(200)
     done();
   });
-
 });

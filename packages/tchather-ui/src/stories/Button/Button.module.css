@@ -1,0 +1,28 @@
+.Button {
+  border-radius: 7px;
+  padding: 0.5em 1.2em;
+  font-size: 17px;
+  line-height: 17px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.Button_Primary {
+  background-color: rgb(99, 62, 243);
+}
+
+.Button_Secondary {
+  background-color: rgb(27, 23, 35);
+}
+
+.Button_Warning {
+  background-color: rgb(240, 198, 10);
+}
+
+.Button_Success {
+  background-color: rgb(45, 175, 62);
+}

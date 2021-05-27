@@ -8,7 +8,10 @@ import {
   Delete,
   Get,
   JsonController,
+  NotFoundError,
+  Param,
   Put,
+  UnauthorizedError,
 } from "routing-controllers";
 import { prismaClient } from "../utils/prismaClient";
 import { Asserts } from "yup";
@@ -46,7 +49,13 @@ export class ConversationsController {
             userId: conversationUserId,
           })),
         },
+        conversationUserOwner: {
+          connect: {
+            userId: currentUser.userId,
+          },
+        },
       },
+      //Selectionner les champs que l'on veut retourner
       select: {
         conversationId: true,
         conversationMessages: true,
@@ -59,8 +68,88 @@ export class ConversationsController {
     return newConversation;
   }
   @Get("/:conversationId")
-  async getConversation() {}
+  async getConversation(
+    @Param("conversationId") conversationId: string,
+    @CurrentUser() currentUser: User
+  ) {
+    const conversation = await prismaClient.conversation.findUnique({
+      where: {
+        conversationId,
+      },
+      include: {
+        conversationUsers: true,
+        conversationMessages: true,
+      },
+    });
+
+    if (!conversation) {
+      throw new NotFoundError("Cette conversation n'existe pas ou plus.");
+    }
+
+    const isUserInConversation = conversation.conversationUsers.find(
+      (conversationUser) => conversationUser.userId === currentUser.userId
+    );
+
+    if (!isUserInConversation) {
+      throw new UnauthorizedError(
+        "Vous n'avez pas accès à cette conversation."
+      );
+    }
+
+    return conversation;
+  }
 
   @Delete("/:conversationId")
-  async deleteConversation() {}
+  async deleteConversation(
+    @Param("conversationId") conversationId: string,
+    @CurrentUser() currentUser: User
+  ) {
+    const conversation = await prismaClient.conversation.findUnique({
+      where: {
+        conversationId,
+      },
+      include: {
+        conversationUserOwner: true,
+        conversationMessages: true,
+        conversationUsers: true,
+      },
+    });
+
+    if (!conversation) {
+      throw new NotFoundError("Cette conversation n'existe pas ou plus.");
+    }
+
+    const isUserConversationOwner =
+      currentUser.userId === conversation.conversationUserOwner.userId;
+
+    if (!isUserConversationOwner) {
+      throw new UnauthorizedError(
+        "Vous n'avez pas accès à cette conversation."
+      );
+    }
+
+    await prismaClient.conversation.update({
+      data: {
+        conversationMessages: {
+          disconnect: conversation.conversationMessages.map(
+            (conversationMessage) => ({
+              messageId: conversationMessage.messageId,
+            })
+          ),
+        },
+        conversationUsers: {
+          disconnect: conversation.conversationUsers.map(
+            (conversationUser) => ({ userId: conversationUser.userId })
+          ),
+        },
+      },
+      where: { conversationId },
+    });
+
+    await prismaClient.conversation.delete({ where: { conversationId } });
+
+    return {
+      message: "Conversation a été supprimée avec succés.",
+    };
+  }
 }

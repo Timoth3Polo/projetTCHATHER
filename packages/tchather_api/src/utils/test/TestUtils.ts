@@ -4,7 +4,7 @@ import superTest from "supertest";
 import { app } from "./../../index";
 export class TestUtils {
   static async dumpDatabase() {
-    await prismaClient.attachement.deleteMany({});
+    await prismaClient.attachment.deleteMany({});
     await prismaClient.message.deleteMany({});
     await prismaClient.conversation.deleteMany({});
     await prismaClient.user.deleteMany({});
@@ -37,9 +37,55 @@ export class TestUtils {
       ],
       skipDuplicates: true,
     });
-
     const users = await prismaClient.user.findMany();
-    
+
+    const convo1 = await prismaClient.conversation.create({
+      data: {
+        conversationName: "Convo 1",
+        conversationType: "GROUP",
+        conversationUsers: {
+          connect: [{ userId: users[0].userId }, { userId: users[1].userId }],
+        },
+        conversationUserOwner: {
+          connect: {
+            userId: users[0].userId,
+          },
+        },
+      },
+      select: {
+        conversationId: true,
+        conversationMessages: true,
+        conversationName: true,
+        conversationType: true,
+        conversationUserOwner: true,
+        conversationUserOwnerId: true,
+        conversationUsers: true,
+      }
+    });
+    const convo2 = await prismaClient.conversation.create({
+      data: {
+        conversationName: "Convo 2",
+        conversationType: "GROUP",
+        conversationUsers: {
+          connect: [{ userId: users[2].userId }, { userId: users[3].userId }],
+        },
+        conversationUserOwner: {
+          connect: {
+            userId: users[2].userId,
+          },
+        },
+      },
+      select: {
+        conversationId: true,
+        conversationMessages: true,
+        conversationName: true,
+        conversationType: true,
+        conversationUserOwner: true,
+        conversationUserOwnerId: true,
+        conversationUsers: true,
+      }
+    });
+
     const user1Token = await this.requestToken(users[0]);
     const user2Token = await this.requestToken(users[1]);
     const user3Token = await this.requestToken(users[2]);
@@ -52,6 +98,11 @@ export class TestUtils {
         user3Token,
         user4Token,
       },
+      conversations: {
+        conversationUser1OwnerWithUser2: convo1,
+        conversationUser3OwnerWithUser4: convo2,
+      }
+      
     };
   }
 
